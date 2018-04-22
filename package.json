@@ -1,0 +1,16 @@
+{
+  "name": "selenium-basics",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "http-server -o",
+    "test": "node e2e/index.js"
+  },
+  "author": "Thiago Bonfim",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/selenium-webdriver": "^3.0.8",
+    "selenium-webdriver": "^3.6.0"
+  }
+}
