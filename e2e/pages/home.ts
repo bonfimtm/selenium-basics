@@ -1,8 +1,7 @@
-import { By, Key } from 'selenium-webdriver';
+import { By, Key, ThenableWebDriver, WebElementPromise } from 'selenium-webdriver';
 
-export default class HomePage {
+export class HomePage {
 
-    private driver;
     private pageURL = 'http://127.0.0.1:8080/';
     private locators = {
         title: By.css('h1'),
@@ -14,11 +13,10 @@ export default class HomePage {
         firstInvited: By.css('#invitedList > li'),
         firstInvitedConfirm: By.css('#invitedList > li > label > input[type="checkbox"]'),
         hideCheckbox: By.css('.main > div > input[type="checkbox"]'),
-        removeButtonForInvitee: invitee => By.xpath(`//span[text()="${invitee}"]/../button[last()]`),
+        inviteeByName: name => By.xpath(`//span[text()="${name}"]/..`),
     };
 
-    constructor(driver) {
-        this.driver = driver;
+    constructor(private driver: ThenableWebDriver) {
     }
 
     open() {
@@ -48,8 +46,29 @@ export default class HomePage {
         elmInputHide.click();
     }
 
-    removeInvitee(invitee) {
-        this.driver.findElement(this.locators.removeButtonForInvitee(invitee)).click();
+    findInviteeByName(inviteeName) {
+        const el = this.driver.findElement(this.locators.inviteeByName(inviteeName));
+        return new Invitee(el);
+    }
+
+}
+
+class Invitee {
+
+    private locators = {
+        removeButton: By.css('button:last-child'),
+        confirmedCheckBox: By.css('input[type="checkbox"]'),
+    }
+
+    constructor(private element: WebElementPromise) {
+    }
+
+    remove() {
+        this.element.findElement(this.locators.removeButton).click();
+    }
+
+    toggleConfirmed() {
+        this.element.findElement(this.locators.confirmedCheckBox).click();
     }
 
 }
